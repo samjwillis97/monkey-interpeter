@@ -15,6 +15,8 @@ func (p *Parser) curTokenIs(t token.TokenType) bool {
 	return p.curToken.Type == t
 }
 
+// peekTokenIs, returns whether the next token matches the given
+// does NOT advance tokens
 func (p *Parser) peekTokenIs(t token.TokenType) bool {
 	return p.peekToken.Type == t
 }
@@ -24,6 +26,7 @@ func (p *Parser) peekError(t token.TokenType) {
 	p.errors = append(p.errors, msg)
 }
 
+// expectPeek, checks if token matches, advances to nextToken if there is a match
 func (p *Parser) expectPeek(t token.TokenType) bool {
 	if !p.peekTokenIs(t) {
 		p.peekError(t)
