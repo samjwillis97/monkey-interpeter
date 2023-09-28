@@ -35,11 +35,10 @@ func TestLetStatements(t *testing.T) {
 			return
 		}
 
-		// TODO: Re-enable this?
-		// val := stmt.(*ast.LetStatement).Value
-		// if !testLiteralExpression(t, val, tt.expectedValue) {
-		// 	return
-		// }
+		val := stmt.(*ast.LetStatement).Value
+		if !testLiteralExpression(t, val, tt.expectedValue) {
+			return
+		}
 	}
 }
 
@@ -73,10 +72,10 @@ func TestReturnStatements(t *testing.T) {
 			t.Fatalf("returnStmt.TokenLiteral not 'return', got %q",
 				returnStmt.TokenLiteral())
 		}
-		// TODO: Re-enable this
-		// if testLiteralExpression(t, returnStmt.ReturnValue, tt.expectedValue) {
-		// 	return
-		// }
+
+		if testLiteralExpression(t, returnStmt.ReturnValue, tt.expectedValue) {
+			return
+		}
 	}
 }
 
@@ -150,10 +149,10 @@ func TestParsingPrefixExpressions(t *testing.T) {
 	}{
 		{"!5;", "!", 5},
 		{"-15;", "-", 15},
-		// {"!foobar;", "!", "foobar"},
-		// {"-foobar;", "-", "foobar"},
-		// {"!true;", "!", true},
-		// {"!false;", "!", false},
+		{"!foobar;", "!", "foobar"},
+		{"-foobar;", "-", "foobar"},
+		{"!true;", "!", true},
+		{"!false;", "!", false},
 	}
 
 	for _, tt := range prefixTests {
@@ -202,14 +201,14 @@ func TestParsingInfixExpressions(t *testing.T) {
 		{"5 < 5;", 5, "<", 5},
 		{"5 == 5;", 5, "==", 5},
 		{"5 != 5;", 5, "!=", 5},
-		// {"foobar + barfoo;", "foobar", "+", "barfoo"},
-		// {"foobar - barfoo;", "foobar", "-", "barfoo"},
-		// {"foobar * barfoo;", "foobar", "*", "barfoo"},
-		// {"foobar / barfoo;", "foobar", "/", "barfoo"},
-		// {"foobar > barfoo;", "foobar", ">", "barfoo"},
-		// {"foobar < barfoo;", "foobar", "<", "barfoo"},
-		// {"foobar == barfoo;", "foobar", "==", "barfoo"},
-		// {"foobar != barfoo;", "foobar", "!=", "barfoo"},
+		{"foobar + barfoo;", "foobar", "+", "barfoo"},
+		{"foobar - barfoo;", "foobar", "-", "barfoo"},
+		{"foobar * barfoo;", "foobar", "*", "barfoo"},
+		{"foobar / barfoo;", "foobar", "/", "barfoo"},
+		{"foobar > barfoo;", "foobar", ">", "barfoo"},
+		{"foobar < barfoo;", "foobar", "<", "barfoo"},
+		{"foobar == barfoo;", "foobar", "==", "barfoo"},
+		{"foobar != barfoo;", "foobar", "!=", "barfoo"},
 		{"true == true", true, "==", true},
 		{"true != false", true, "!=", false},
 		{"false == false", false, "==", false},
@@ -320,10 +319,10 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 			"2 / (5 + 5)",
 			"(2 / (5 + 5))",
 		},
-		// {
-		// 	"(5 + 5) * 2 * (5 + 5)",
-		// 	"(((5 + 5) * 2) * (5 + 5))",
-		// },
+		{
+			"(5 + 5) * 2 * (5 + 5)",
+			"(((5 + 5) * 2) * (5 + 5))",
+		},
 		{
 			"-(5 + 5)",
 			"(-(5 + 5))",
@@ -332,18 +331,18 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 			"!(true == true)",
 			"(!(true == true))",
 		},
-		// {
-		// 	"a + add(b * c) + d",
-		// 	"((a + add((b * c))) + d)",
-		// },
-		// {
-		// 	"add(a, b, 1, 2 * 3, 4 + 5, add(6, 7 * 8))",
-		// 	"add(a, b, 1, (2 * 3), (4 + 5), add(6, (7 * 8)))",
-		// },
-		// {
-		// 	"add(a + b + c * d / f + g)",
-		// 	"add((((a + b) + ((c * d) / f)) + g))",
-		// },
+		{
+			"a + add(b * c) + d",
+			"((a + add((b * c))) + d)",
+		},
+		{
+			"add(a, b, 1, 2 * 3, 4 + 5, add(6, 7 * 8))",
+			"add(a, b, 1, (2 * 3), (4 + 5), add(6, (7 * 8)))",
+		},
+		{
+			"add(a + b + c * d / f + g)",
+			"add((((a + b) + ((c * d) / f)) + g))",
+		},
 	}
 
 	for _, tt := range tests {
@@ -581,43 +580,43 @@ func TestFunctionParameterParsing(t *testing.T) {
 	}
 }
 
-// func TestCallExpressionParsing(t *testing.T) {
-// 	input := "add(1, 2 * 3, 4 + 5);"
+func TestCallExpressionParsing(t *testing.T) {
+	input := "add(1, 2 * 3, 4 + 5);"
 
-// 	l := lexer.New(input)
-// 	p := New(l)
-// 	program := p.ParseProgram()
-// 	checkParserErrors(t, p)
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
 
-// 	if len(program.Statements) != 1 {
-// 		t.Fatalf("program.Statements does not contain %d statements. got=%d\n",
-// 			1, len(program.Statements))
-// 	}
+	if len(program.Statements) != 1 {
+		t.Fatalf("program.Statements does not contain %d statements. got=%d\n",
+			1, len(program.Statements))
+	}
 
-// 	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
-// 	if !ok {
-// 		t.Fatalf("stmt is not ast.ExpressionStatement. got=%T",
-// 			program.Statements[0])
-// 	}
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("stmt is not ast.ExpressionStatement. got=%T",
+			program.Statements[0])
+	}
 
-// 	exp, ok := stmt.Expression.(*ast.CallExpression)
-// 	if !ok {
-// 		t.Fatalf("stmt.Expression is not ast.CallExpression. got=%T",
-// 			stmt.Expression)
-// 	}
+	exp, ok := stmt.Expression.(*ast.CallExpression)
+	if !ok {
+		t.Fatalf("stmt.Expression is not ast.CallExpression. got=%T",
+			stmt.Expression)
+	}
 
-// 	if !testIdentifier(t, exp.Function, "add") {
-// 		return
-// 	}
+	if !testIdentifier(t, exp.Function, "add") {
+		return
+	}
 
-// 	if len(exp.Arguments) != 3 {
-// 		t.Fatalf("wrong length of arguments. got=%d", len(exp.Arguments))
-// 	}
+	if len(exp.Arguments) != 3 {
+		t.Fatalf("wrong length of arguments. got=%d", len(exp.Arguments))
+	}
 
-// 	testLiteralExpression(t, exp.Arguments[0], 1)
-// 	testInfixExpression(t, exp.Arguments[1], 2, "*", 3)
-// 	testInfixExpression(t, exp.Arguments[2], 4, "+", 5)
-// }
+	testLiteralExpression(t, exp.Arguments[0], 1)
+	testInfixExpression(t, exp.Arguments[1], 2, "*", 3)
+	testInfixExpression(t, exp.Arguments[2], 4, "+", 5)
+}
 
 // func TestCallExpressionParameterParsing(t *testing.T) {
 // 	tests := []struct {
