@@ -32,3 +32,23 @@ Converts the given source code into tokens.
 
 
 ### Abstract Syntax Tree (AST)
+
+
+## Lexing
+
+
+## Parsing
+
+
+## Evaluation
+
+- Using a tree-walking interpreter, like:
+    - Traverses the AST
+    - Visit each node
+    - Do what the node signifies (print, add, etc... )
+
+
+### Representing Objects
+
+- Each value will be an `Object`
+
