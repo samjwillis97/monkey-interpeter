@@ -28,7 +28,7 @@ const MONKEY_FACE = `            __,__
 
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
-  env := object.NewEnvironment()
+	env := object.NewEnvironment()
 
 	for {
 		fmt.Fprintf(out, PROMPT)
